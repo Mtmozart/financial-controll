@@ -14,20 +14,20 @@ Um projeto em Java utilizando spring-boot, com o objetivo de melhorar minhas hab
 
 - **lombok:**
     - Descrição: O Projeto Lombok é uma biblioteca do Java que auxilia na redução da verbosidade do código, fornecendo anotações para gerar automaticamente métodos como getters, setters, construtores, etc. Isso ajuda a tornar o código mais limpo e conciso.
-
-```java
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-
-@Getter
-@Setter
-@AllArgsConstructor
-public class Person {
-  private String firstName;
-  private String lastName;
-}
-```
+Exemplo: 
+  ```java
+  import lombok.AllArgsConstructor;
+  import lombok.Getter;
+  import lombok.Setter;
+  
+  @Getter
+  @Setter
+  @AllArgsConstructor
+  public class Person {
+    private String firstName;
+    private String lastName;
+  }
+  ```
 ## Índice
 
 - [Visão Geral](#visão-geral)
