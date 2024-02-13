@@ -28,6 +28,25 @@ Exemplo:
     private String lastName;
   }
   ```
+  ## Anotações spring:
+  Em spring, algumas anotações são necessárias para "falar" ao spring o que deve ser feito com aquela classe, se por exemplo
+  é um service o controller, ou entitie.
+- Anotações úteis em controle 
+  - RestController - determina que é um controlle da arquitertura MVC, poderia ser um Service ou simplesmente Component;
+  - ResquetMapping - Determina uma rota comum a todos as rotas/protocolos;
+  - PostingMapping - Determina que o protocolo é tipo post, poderia ser Get, Delete, Put, PATH etc.
+  - RequestBody = Determina que anotação é usada para indicar que o parâmetro do método de controle (Controller method) deve ser extraído do corpo da requisição HTTP. 
+```
+@RestController
+@RequestMapping("incomes")
+public class Income {
+
+    @PostMapping
+    public void register(@RequestBody String json){
+        System.out.println(json);
+    }
+```
+
 ## Índice
 
 - [Visão Geral](#visão-geral)
