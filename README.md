@@ -31,12 +31,12 @@ Exemplo:
   ## Anotações spring:
   Em spring, algumas anotações são necessárias para "falar" ao spring o que deve ser feito com aquela classe, se por exemplo
   é um service o controller, ou entitie.
-- Anotações úteis em controle 
+- Anotações úteis em controller 
   - RestController - determina que é um controlle da arquitertura MVC, poderia ser um Service ou simplesmente Component;
   - ResquetMapping - Determina uma rota comum a todos as rotas/protocolos;
   - PostingMapping - Determina que o protocolo é tipo post, poderia ser Get, Delete, Put, PATH etc.
   - RequestBody = Determina que anotação é usada para indicar que o parâmetro do método de controle (Controller method) deve ser extraído do corpo da requisição HTTP. 
-```
+```java
 @RestController
 @RequestMapping("incomes")
 public class Income {
@@ -45,6 +45,30 @@ public class Income {
     public void register(@RequestBody String json){
         System.out.println(json);
     }
+```
+- **flyway:**
+-  É uma dependência a qual utilizo para realizar migrations no banco de dados, como critério é ficar atento a como o arquivo deve ser chamado e deve ter a extenssão .sql, como no exemplo: V1__create-table-users.sql, dentro passo os parâmetros sql.
+
+**Bean validation:**
+- É uma dependência a qual utilizo para reazliar validações, passando suas anotações, para que assim crie uma validação, são exemplo:
+```java
+public record CreateUserDTO(
+        @NotBlank
+        String name,
+        @NotBlank @Email
+        String email,
+        @NotBlank @Pattern(regexp = "^(?=.*[0-9])?(?=.*[@$!%*?&])?(?=.*[A-Z])?[A-Za-z\\d@$!%*?&]{5,}$")
+        String password) {
+}
+```
+  Se eu quiser passar uma message, eu posso passar o padrão message = "", dentro da anotação, mas posso criar um aquivo 
+na pasta reources, com o nome "ValidationMessages.properties", e dentro do bean passo message={nome_parametro.message}, como no exemplo:
+Paramêtro passado no arquivo: cpf.obrigatorio=CPF é obrigatório. email.obrigatorio=mensagem email.invalido=messagem
+```java
+  @NotBlank(message = "{nome.obrigatorio}")
+        String nome,
+        @NotBlank(message = "{email.obrigatorio}") @Email(message = "{email.invalido}")
+        String email,
 ```
 
 ## Índice
