@@ -3,6 +3,7 @@ package inancial_control.api.controller;
 import inancial_control.api.repository.UserRepository;
 import inancial_control.api.user.CreateUserDTO;
 import inancial_control.api.user.User;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +17,7 @@ public class UserController {
     private UserRepository repository;
 
     @PostMapping
-    public void createUser(@RequestBody CreateUserDTO datas){
+    public void createUser(@RequestBody @Valid CreateUserDTO datas){
             repository.save(new User(datas));
     }
 }

@@ -61,7 +61,7 @@ public record CreateUserDTO(
         String password) {
 }
 ```
-  Se eu quiser passar uma message, eu posso passar o padrão message = "", dentro da anotação, mas posso criar um aquivo 
+Se eu quiser passar uma message, eu posso passar o padrão message = "", dentro da anotação, mas posso criar um aquivo 
 na pasta reources, com o nome "ValidationMessages.properties", e dentro do bean passo message={nome_parametro.message}, como no exemplo:
 Paramêtro passado no arquivo: cpf.obrigatorio=CPF é obrigatório. email.obrigatorio=mensagem email.invalido=messagem
 ```java
@@ -70,7 +70,14 @@ Paramêtro passado no arquivo: cpf.obrigatorio=CPF é obrigatório. email.obriga
         @NotBlank(message = "{email.obrigatorio}") @Email(message = "{email.invalido}")
         String email,
 ```
+ Não pode esquecer de passar a anotação @valid no campo onde desejo, como no exemplo:
 
+```java
+  @PostMapping
+    public void createUser(@RequestBody @Valid CreateUserDTO datas){
+            repository.save(new User(datas));
+    }
+```
 ## Índice
 
 - [Visão Geral](#visão-geral)
