@@ -1,4 +1,4 @@
-package inancial_control.api.user;
+package inancial_control.api.domain.user;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

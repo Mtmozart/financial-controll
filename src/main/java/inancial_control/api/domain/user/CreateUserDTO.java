@@ -1,4 +1,4 @@
-package inancial_control.api.user;
+package inancial_control.api.domain.user;
 
 import jakarta.validation.constraints.*;
 import org.springframework.context.annotation.Bean;
