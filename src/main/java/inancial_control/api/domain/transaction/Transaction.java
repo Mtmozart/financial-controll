@@ -1,25 +1,26 @@
 package inancial_control.api.domain.transaction;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.Date;
 
-/*@Table(name = "users")
-@Entity(name = "User")*/
+@Table(name = "transactions")
+@Entity(name = "Transaction")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-//@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = "id")
 public class Transaction {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Month month;
+    @Enumerated(EnumType.STRING)
+    private MonthTransaction monthTransaction;
+    @Enumerated(EnumType.STRING)
     private TransactionOperation type;
     private String description;
     private BigDecimal amount;
