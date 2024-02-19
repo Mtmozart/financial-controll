@@ -1,5 +1,6 @@
 package inancial_control.api.domain.transaction;
 
+import inancial_control.api.domain.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -24,4 +25,11 @@ public class Transaction {
     private TransactionOperation type;
     private String description;
     private BigDecimal amount;
+    @ManyToOne
+    private User user;
+
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }
