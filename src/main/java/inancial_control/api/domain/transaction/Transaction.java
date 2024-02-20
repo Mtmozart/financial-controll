@@ -25,9 +25,10 @@ public class Transaction {
     private TransactionOperation type;
     private String description;
     private BigDecimal amount;
+    @Enumerated(EnumType.STRING)
+    private Status status;
     @ManyToOne
     private User user;
-
 
     public void setUser(User user) {
         this.user = user;
