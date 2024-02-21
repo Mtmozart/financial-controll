@@ -41,15 +41,15 @@ public class User {
         this.transactions = transactions;
     }
 
-    public void update(UpdateUserDTO datas){
-        if (datas.name() != null) {
-            this.name = datas.name();
+    public void update(UpdateUserDTO data){
+        if (data.name() != null) {
+            this.name = data.name();
         }
-        if (datas.email() != null) {
-            this.email = datas.email();
+        if (data.email() != null) {
+            this.email = data.email();
         }
-        if (datas.password() != null) {
-            this.password = datas.password();
+        if (data.password() != null) {
+            this.password = data.password();
         }
     }
 

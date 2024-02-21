@@ -5,6 +5,7 @@ import inancial_control.api.domain.user.UpdateUserDTO;
 import inancial_control.api.repository.UserRepository;
 import inancial_control.api.domain.user.CreateUserDTO;
 import inancial_control.api.domain.user.User;
+import inancial_control.api.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,34 +19,31 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     @Autowired
-    private UserRepository repository;
+    private UserService service;
 
     @PostMapping
-    public ResponseEntity create(@RequestBody @Valid CreateUserDTO datas){
-         var user = new User(datas);
-            repository.save(user);
-        return ResponseEntity.ok(new DetailsUserDTO(user));
-
+    public ResponseEntity create(@RequestBody @Valid CreateUserDTO data){
+        var user = service.create(data);
+        return ResponseEntity.ok(user);
     }
+
     @GetMapping("/{id}")
     public ResponseEntity details(@PathVariable Long id){
-      var user =  repository.getReferenceById(id);
-      return ResponseEntity.ok(new DetailsUserDTO(user));
+      var user =  service.details(id);
+      return ResponseEntity.ok(user);
     }
 
     @PutMapping
     @Transactional
-    public ResponseEntity update(@RequestBody @Valid UpdateUserDTO datas) {
-        var user =  repository.getReferenceById(datas.id());
-        user.update(datas);
-        return ResponseEntity.ok(new DetailsUserDTO(user));
+    public ResponseEntity update(@RequestBody @Valid UpdateUserDTO data) {
+        var user =  service.update(data);
+        return ResponseEntity.ok(user);
     }
 
-@DeleteMapping("{id}")
-@Transactional
-public ResponseEntity delete(@PathVariable Long id) {
-    var medico = repository.getReferenceById(id);
-    medico.delete(id);
-    return ResponseEntity.noContent().build();
-}
+    @DeleteMapping("{id}")
+    @Transactional
+    public ResponseEntity delete(@PathVariable Long id) {
+       service.delete(id);
+       return ResponseEntity.noContent().build();
+    }
 }
