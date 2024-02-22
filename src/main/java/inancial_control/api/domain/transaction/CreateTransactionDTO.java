@@ -1,6 +1,5 @@
 package inancial_control.api.domain.transaction;
 
-import inancial_control.api.domain.user.User;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 

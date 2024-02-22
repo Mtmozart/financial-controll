@@ -30,6 +30,16 @@ public class Transaction {
     @ManyToOne
     private User user;
 
+
+    public Transaction(MonthTransaction monthTransaction, TransactionOperation type, String description, BigDecimal amount, Status status, User user) {
+        this.monthTransaction = monthTransaction;
+        this.type = type;
+        this.description = description;
+        this.amount = amount;
+        this.status = status;
+        this.user = user;
+    }
+
     public void setUser(User user) {
         this.user = user;
     }
