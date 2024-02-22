@@ -4,7 +4,8 @@ import inancial_control.api.domain.user.CreateUserDTO;
 import inancial_control.api.domain.user.DetailsUserDTO;
 import inancial_control.api.domain.user.UpdateUserDTO;
 import inancial_control.api.domain.user.User;
-import inancial_control.api.domain.user.validations.updateValidators.IValidatorUser;
+import inancial_control.api.domain.user.validations.createValidators.IValidatorUserCreate;
+import inancial_control.api.domain.user.validations.updateValidators.IValidatorUserUpdate;
 import inancial_control.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,11 +17,11 @@ public class UserService {
     @Autowired
     private UserRepository repository;
     @Autowired
-    private List<IValidatorUser> validatorUser;
+    private List<IValidatorUserUpdate> validatorUserUpdates;
+    @Autowired List<IValidatorUserCreate> validatorUserCreates;
     public DetailsUserDTO create(CreateUserDTO data){
-
-
         var user = new User(data);
+        validatorUserCreates.forEach(v -> v.validator(data));
         repository.save(user);
         return new DetailsUserDTO(user);
     }
@@ -32,8 +33,7 @@ public class UserService {
 
     public DetailsUserDTO update(UpdateUserDTO data){
         var user =  repository.getReferenceById(data.id());
-        validatorUser.forEach(v -> v.validator(data));
-
+        validatorUserUpdates.forEach(v -> v.validator(data));
         user.update(data);
         return new DetailsUserDTO(user);
     }
