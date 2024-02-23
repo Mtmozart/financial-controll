@@ -4,6 +4,7 @@ import inancial_control.api.domain.transaction.CreateTransactionDTO;
 import inancial_control.api.service.TransactionService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +23,7 @@ public class TransactionController {
          return ResponseEntity.ok(transaction);
     }
     @GetMapping("/{id}")
-    public ResponseEntity details(@PathVariable Long id){
+    public ResponseEntity details(@PathVariable(required = false) Long id){
         var transaction =  service.details(id);
         return ResponseEntity.ok(transaction);
     }

@@ -29,11 +29,11 @@ public class TransactionService {
     }
 
 
-        public DetailsTransactionDTO details(@PathVariable Long id){
-                var transaction = repository.findById(id);
-                if(!transaction.isPresent()){
-                    throw new ValidacaoException("Tabela não encontrada.");
-                }
-                return  new DetailsTransactionDTO(transaction.get());
+        public DetailsTransactionDTO details(Long id){
+       var transaction = repository.findById(id);
+       if(!transaction.isPresent()){
+           throw new ValidacaoException("Transação não encontrada.");
+       }
+        return  new DetailsTransactionDTO(transaction.get());
         }
 }
