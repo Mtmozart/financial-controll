@@ -31,12 +31,12 @@ public class Transaction {
     private User user;
 
 
-    public Transaction(MonthTransaction monthTransaction, TransactionOperation type, String description, BigDecimal amount, Status status, User user) {
-        this.monthTransaction = monthTransaction;
-        this.type = type;
-        this.description = description;
-        this.amount = amount;
-        this.status = status;
+    public Transaction(CreateTransactionDTO data, User user) {
+        this.monthTransaction = data.monthTransaction();
+        this.type = data.transactionOperation();
+        this.description = data.description();
+        this.amount = data.amount();
+        this.status = data.status();
         this.user = user;
     }
 

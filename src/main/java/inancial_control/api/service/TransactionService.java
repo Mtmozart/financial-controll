@@ -8,6 +8,8 @@ import inancial_control.api.repository.TransactionsRepository;
 import inancial_control.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Service
 public class TransactionService {
@@ -21,9 +23,17 @@ public class TransactionService {
             throw new ValidacaoException("Usuário não encontrado.");
         }
         var user = userRepository.findById(data.idUser());
-        var transaction = new Transaction(data.monthTransaction(), data.transactionOperation(),
-           data.description(), data.amount(), data.status(), user.get());
+        var transaction = new Transaction(data, user.get());
         repository.save(transaction);
         return new DetailsTransactionDTO(transaction);
     }
+
+
+        public DetailsTransactionDTO details(@PathVariable Long id){
+                var transaction = repository.findById(id);
+                if(!transaction.isPresent()){
+                    throw new ValidacaoException("Tabela não encontrada.");
+                }
+                return  new DetailsTransactionDTO(transaction.get());
+        }
 }
