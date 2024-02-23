@@ -1,8 +1,6 @@
 package inancial_control.api.service;
 
-import inancial_control.api.domain.transaction.CreateTransactionDTO;
-import inancial_control.api.domain.transaction.DetailsTransactionDTO;
-import inancial_control.api.domain.transaction.Transaction;
+import inancial_control.api.domain.transaction.*;
 import inancial_control.api.domain.user.validations.ValidacaoException;
 import inancial_control.api.repository.TransactionsRepository;
 import inancial_control.api.repository.UserRepository;
@@ -18,22 +16,44 @@ public class TransactionService {
     TransactionsRepository repository;
     @Autowired
     UserRepository userRepository;
-    public DetailsTransactionDTO create(CreateTransactionDTO data){
-        if(data.idUser() != null && !userRepository.existsById(data.idUser())){
+
+    public DetailsTransactionDTO create(CreateTransactionDTO data) {
+        var user = userRepository.findById(data.idUser());
+        if (data.idUser() != null && !user.isPresent()) {
             throw new ValidacaoException("Usuário não encontrado.");
         }
-        var user = userRepository.findById(data.idUser());
+
         var transaction = new Transaction(data, user.get());
         repository.save(transaction);
         return new DetailsTransactionDTO(transaction);
     }
 
 
-        public DetailsTransactionDTO details(Long id){
-       var transaction = repository.findById(id);
-       if(!transaction.isPresent()){
-           throw new ValidacaoException("Transação não encontrada.");
-       }
-        return  new DetailsTransactionDTO(transaction.get());
+    public DetailsTransactionDTO details(Long id) {
+        var transaction = repository.findById(id);
+        if (!transaction.isPresent()) {
+            throw new ValidacaoException("Transação não encontrada.");
         }
+        return new DetailsTransactionDTO(transaction.get());
+    }
+
+    public DetailsTransactionUpdateDTO update(Long id, UpdateTransactionDTO data){
+        var user = userRepository.findById(id);
+        if (!user.isPresent()) {
+            throw new ValidacaoException("Usuário não encontrado.");
+        }
+        var transaction = repository.findById(id);
+        if (!transaction.isPresent()) {
+            throw new ValidacaoException("Transação não encontrada.");
+        }
+        if(user.get().getId() != transaction.get().getUser().getId()){
+            throw new ValidacaoException("Usuário inválido.");
+        }
+
+       transaction.get().update(data);
+
+        return new DetailsTransactionUpdateDTO(id,transaction.get() );
+
+
+    }
 }

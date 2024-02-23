@@ -1,6 +1,7 @@
 package inancial_control.api.controller;
 
 import inancial_control.api.domain.transaction.CreateTransactionDTO;
+import inancial_control.api.domain.transaction.UpdateTransactionDTO;
 import inancial_control.api.service.TransactionService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +24,15 @@ public class TransactionController {
          return ResponseEntity.ok(transaction);
     }
     @GetMapping("/{id}")
-    public ResponseEntity details(@PathVariable(required = false) Long id){
+    public ResponseEntity details(@PathVariable Long id){
         var transaction =  service.details(id);
+        return ResponseEntity.ok(transaction);
+    }
+
+    @Transactional
+    @PutMapping("/{id}")
+    public ResponseEntity update(@PathVariable Long id, @RequestBody UpdateTransactionDTO data){
+        var transaction =  service.update(id, data);
         return ResponseEntity.ok(transaction);
     }
 

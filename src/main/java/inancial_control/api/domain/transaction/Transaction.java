@@ -1,5 +1,6 @@
 package inancial_control.api.domain.transaction;
 
+import inancial_control.api.domain.user.UpdateUserDTO;
 import inancial_control.api.domain.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -39,8 +40,28 @@ public class Transaction {
         this.status = data.status();
         this.user = user;
     }
-
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public void update(UpdateTransactionDTO data){
+        if (data.description() != null) {
+            this.description = data.description();
+        }
+
+        if (data.monthTransaction() != null) {
+            this.monthTransaction = data.monthTransaction();
+        }
+
+        if (data.transactionOperation() != null) {
+            this.type = data.transactionOperation();
+        }
+        if (data.amount() != null) {
+           this.amount = data.amount();
+        }
+        if (data.status() != null) {
+            this.status = data.status();
+        }
+
     }
 }

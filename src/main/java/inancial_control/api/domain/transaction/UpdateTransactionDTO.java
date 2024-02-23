@@ -6,17 +6,11 @@ import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 public record UpdateTransactionDTO(
-        @NotNull
-        Long idUser,
-        @NotBlank
+        Long id,
         String description,
-        @NotNull
         BigDecimal amount,
-        @NotNull
         Status status,
-        @NotNull
         MonthTransaction monthTransaction,
-        @NotNull
         TransactionOperation transactionOperation
 ) {
 }
