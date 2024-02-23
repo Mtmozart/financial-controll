@@ -42,6 +42,7 @@ public class User {
     }
 
     public void update(UpdateUserDTO data){
+
         if (data.name() != null) {
             this.name = data.name();
         }

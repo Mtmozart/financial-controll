@@ -48,11 +48,9 @@ public class Transaction {
         if (data.description() != null) {
             this.description = data.description();
         }
-
         if (data.monthTransaction() != null) {
             this.monthTransaction = data.monthTransaction();
         }
-
         if (data.transactionOperation() != null) {
             this.type = data.transactionOperation();
         }

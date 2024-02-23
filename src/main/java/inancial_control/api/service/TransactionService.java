@@ -38,21 +38,22 @@ public class TransactionService {
     }
 
     public DetailsTransactionUpdateDTO update(Long id, UpdateTransactionDTO data){
-        var user = userRepository.findById(id);
-        if (!user.isPresent()) {
+        var user = userRepository.getReferenceById(data.userId());
+        if (user == null) {
             throw new ValidacaoException("Usuário não encontrado.");
         }
-        var transaction = repository.findById(id);
-        if (!transaction.isPresent()) {
+        var transaction = repository.getReferenceById(id);
+        if (transaction == null) {
             throw new ValidacaoException("Transação não encontrada.");
         }
-        if(user.get().getId() != transaction.get().getUser().getId()){
+        if(user.getId() != transaction.getUser().getId()){
+            System.out.println("user id: " + user.getId() + user.getEmail() + user.getTransactions() + ", user id da transação: " + transaction.getUser().getId());
             throw new ValidacaoException("Usuário inválido.");
         }
 
-       transaction.get().update(data);
+        transaction.update(data);
 
-        return new DetailsTransactionUpdateDTO(id,transaction.get() );
+        return new DetailsTransactionUpdateDTO(id, transaction);
 
 
     }
