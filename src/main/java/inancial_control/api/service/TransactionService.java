@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Service
 public class TransactionService {
@@ -40,7 +43,7 @@ public class TransactionService {
     }
 
     @Transactional
-    public DetailsTransactionUpdateDTO update(Long id, UpdateTransactionDTO data){
+    public DetailsTransactionUpdateDTO update(Long id, UpdateTransactionDTO data) {
         var user = userRepository.getReferenceById(data.userId());
         if (user == null) {
             throw new ValidacaoException("Usuário não encontrado.");
@@ -49,7 +52,7 @@ public class TransactionService {
         if (transaction == null) {
             throw new ValidacaoException("Transação não encontrada.");
         }
-        if(user.getId() != transaction.getUser().getId()){
+        if (user.getId() != transaction.getUser().getId()) {
             throw new ValidacaoException("Usuário inválido.");
         }
         transaction.update(data);
@@ -59,17 +62,27 @@ public class TransactionService {
 
     @Transactional
     public String delete(Long id) {
-      var transaction = repository.findById(id);
+        var transaction = repository.findById(id);
         if (!transaction.isPresent()) {
             throw new ValidacaoException("Transação não encontrada.");
         }
-      var user = userRepository.findById(transaction.get().getUser().getId());
+        var user = userRepository.findById(transaction.get().getUser().getId());
         if (!user.isPresent()) {
             throw new ValidacaoException("Usuário não encontrado.");
         }
-      transaction.get().removeTransaction();
-      repository.deleteById(transaction.get().getId());
-      user.get().removeTransaction(transaction.get());
-      return "Transação removido com suceso.";
+        transaction.get().removeTransaction();
+        user.get().removeTransaction(transaction.get());
+        repository.deleteById(transaction.get().getId());
+        return "Transação removido com suceso.";
+    }
+
+    public List<DetailsTransactionDTO> allTransactionsForUser(Long id) {
+        List<DetailsTransactionDTO> transactionDTOS = new ArrayList<>();
+        var transactions = repository.findAllByUserId(id);
+
+        transactions.forEach(t ->  transactionDTOS.add( new DetailsTransactionDTO(t))
+        );
+
+        return transactionDTOS;
     }
 }
