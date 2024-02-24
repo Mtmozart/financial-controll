@@ -39,7 +39,7 @@ public class TransactionController {
     @DeleteMapping("/{id}")
     public ResponseEntity delete(@PathVariable Long id){
         var message =  service.delete(id);
-        return ResponseEntity.noContent().header("message", message).build();
+        return ResponseEntity.ok(message);
     }
 
 }

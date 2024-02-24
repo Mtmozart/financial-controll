@@ -59,11 +59,17 @@ public class TransactionService {
 
     @Transactional
     public String delete(Long id) {
-      var transaction = repository.getReferenceById(id);
-      var user = userRepository.getReferenceById(transaction.getUser().getId());
-      transaction.removeTransaction();
-      repository.deleteById(transaction.getId());
-      user.removeTransaction(transaction);
+      var transaction = repository.findById(id);
+        if (!transaction.isPresent()) {
+            throw new ValidacaoException("Transação não encontrada.");
+        }
+      var user = userRepository.findById(transaction.get().getUser().getId());
+        if (!user.isPresent()) {
+            throw new ValidacaoException("Usuário não encontrado.");
+        }
+      transaction.get().removeTransaction();
+      repository.deleteById(transaction.get().getId());
+      user.get().removeTransaction(transaction.get());
       return "Transação removido com suceso.";
     }
 }
