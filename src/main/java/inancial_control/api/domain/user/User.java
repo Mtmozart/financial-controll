@@ -57,4 +57,8 @@ public class User {
     public void delete(Long id) {
         this.active = false;
     }
+
+    public void removeTransaction(Transaction t){
+       transactions.remove(t);
+    }
 }

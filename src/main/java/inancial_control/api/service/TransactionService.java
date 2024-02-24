@@ -6,8 +6,8 @@ import inancial_control.api.repository.TransactionsRepository;
 import inancial_control.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.transaction.annotation.Transactional;
+
 
 @Service
 public class TransactionService {
@@ -17,6 +17,7 @@ public class TransactionService {
     @Autowired
     UserRepository userRepository;
 
+    @Transactional
     public DetailsTransactionDTO create(CreateTransactionDTO data) {
         var user = userRepository.findById(data.idUser());
         if (data.idUser() != null && !user.isPresent()) {
@@ -29,6 +30,7 @@ public class TransactionService {
     }
 
 
+    @Transactional
     public DetailsTransactionDTO details(Long id) {
         var transaction = repository.findById(id);
         if (!transaction.isPresent()) {
@@ -37,6 +39,7 @@ public class TransactionService {
         return new DetailsTransactionDTO(transaction.get());
     }
 
+    @Transactional
     public DetailsTransactionUpdateDTO update(Long id, UpdateTransactionDTO data){
         var user = userRepository.getReferenceById(data.userId());
         if (user == null) {
@@ -47,14 +50,20 @@ public class TransactionService {
             throw new ValidacaoException("Transação não encontrada.");
         }
         if(user.getId() != transaction.getUser().getId()){
-            System.out.println("user id: " + user.getId() + user.getEmail() + user.getTransactions() + ", user id da transação: " + transaction.getUser().getId());
             throw new ValidacaoException("Usuário inválido.");
         }
-
         transaction.update(data);
-
         return new DetailsTransactionUpdateDTO(id, transaction);
 
+    }
 
+    @Transactional
+    public String delete(Long id) {
+      var transaction = repository.getReferenceById(id);
+      var user = userRepository.getReferenceById(transaction.getUser().getId());
+      transaction.removeTransaction();
+      repository.deleteById(transaction.getId());
+      user.removeTransaction(transaction);
+      return "Transação removido com suceso.";
     }
 }

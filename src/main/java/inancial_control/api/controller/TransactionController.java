@@ -18,8 +18,7 @@ public class TransactionController {
     TransactionService service;
 
     @PostMapping
-    @Transactional
-    public ResponseEntity create(@RequestBody @Valid CreateTransactionDTO data){
+   public ResponseEntity create(@RequestBody @Valid CreateTransactionDTO data){
          var transaction = service.create(data);
          return ResponseEntity.ok(transaction);
     }
@@ -29,11 +28,18 @@ public class TransactionController {
         return ResponseEntity.ok(transaction);
     }
 
-    @Transactional
+
     @PutMapping("/{id}")
     public ResponseEntity update(@PathVariable Long id, @RequestBody UpdateTransactionDTO data){
         var transaction =  service.update(id, data);
         return ResponseEntity.ok(transaction);
+    }
+
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity delete(@PathVariable Long id){
+        var message =  service.delete(id);
+        return ResponseEntity.noContent().header("message", message).build();
     }
 
 }

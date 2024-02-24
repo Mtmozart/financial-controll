@@ -62,4 +62,7 @@ public class Transaction {
         }
 
     }
+    public void removeTransaction() {
+        this.user = null;
+    }
 }
