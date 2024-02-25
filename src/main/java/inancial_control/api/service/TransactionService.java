@@ -76,14 +76,14 @@ public class TransactionService {
         return converteData(transactions);
     }
 
-   /* public List<DetailsTransactionDTO> userTransactionsEntriesByMonthByUser(Long id, MonthTransaction month) {
+    public List<DetailsTransactionDTO> userTransactionsEntriesByMonthByUser(Long id, MonthTransaction month) {
         var user = verifyUser(id);
         var transactions = repository.userTransactionsEntriesByMonthByUser(month, user.getId());
         if (transactions.isEmpty()) {
             throw new ValidacaoException("Nenhuma transação encotrada para o mês.");
         }
         return converteData(transactions);
-    }*/
+    }
 
     /* method to simplify the code*/
     private User verifyUser(Long id) {
