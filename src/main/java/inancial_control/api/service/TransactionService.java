@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.FileDescriptor;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,10 +80,25 @@ public class TransactionService {
     public List<DetailsTransactionDTO> allTransactionsForUser(Long id) {
         List<DetailsTransactionDTO> transactionDTOS = new ArrayList<>();
         var transactions = repository.findAllByUserId(id);
-
         transactions.forEach(t ->  transactionDTOS.add( new DetailsTransactionDTO(t))
         );
-
         return transactionDTOS;
+    }
+
+    public List<DetailsTransactionDTO> userTransactionsByMonth(Long id, MonthTransaction month){
+
+        List<DetailsTransactionDTO> transactionDTOS = new ArrayList<>();
+        var user = userRepository.findById(id);
+        if(user.isEmpty()){
+            throw new ValidacaoException("Usuário não encontrado.");
+        }
+        var transactions = repository.findAllByMonthTransactionAndUserId(month, user.get().getId());
+
+        if(!transactions.isEmpty()){
+            throw new ValidacaoException("Nenhuma transação encotrada para o mês.");
+        }
+                transactions.stream()
+                        . forEach(t ->  transactionDTOS.add(new DetailsTransactionDTO(t)));
+        return  transactionDTOS;
     }
 }
