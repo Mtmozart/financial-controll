@@ -20,4 +20,8 @@ public interface TransactionsRepository extends JpaRepository<Transaction, Long>
     @Query("SELECT t FROM Transaction t WHERE t.monthTransaction = :month AND t.user.id = :userId AND t.type = 'ENTRY'")
     List<Transaction> userTransactionsEntriesByMonthByUser(MonthTransaction month, Long userId);
 
+    @Query("SELECT t FROM Transaction t WHERE t.monthTransaction = :month AND t.user.id = :userId AND t.type = 'EXIT'")
+    List<Transaction> userTransactionsExitsByMonthByUser(MonthTransaction month, Long userId);
+
+
 }

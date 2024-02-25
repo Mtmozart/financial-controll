@@ -67,7 +67,11 @@ public class TransactionController {
     public ResponseEntity userTransactionsEntriesByMonth(@PathVariable Long id, @PathVariable MonthTransaction month){
         var transactions = service.userTransactionsEntriesByMonthByUser(id, month);
         return ResponseEntity.ok(Collections.unmodifiableList(transactions));
-
+    }
+    @GetMapping("/user/{id}/month/{month}/exits")
+    public ResponseEntity userTransactionsExitsByMonth(@PathVariable Long id, @PathVariable MonthTransaction month){
+        var transactions = service.userTransactionsExitsByMonthByUser(id, month);
+        return ResponseEntity.ok(Collections.unmodifiableList(transactions));
     }
 
 
