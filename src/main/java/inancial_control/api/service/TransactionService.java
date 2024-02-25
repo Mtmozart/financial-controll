@@ -2,6 +2,7 @@ package inancial_control.api.service;
 
 import inancial_control.api.domain.transaction.*;
 import inancial_control.api.domain.user.DetailsUserDTO;
+import inancial_control.api.domain.user.User;
 import inancial_control.api.domain.user.validations.ValidacaoException;
 import inancial_control.api.repository.TransactionsRepository;
 import inancial_control.api.repository.UserRepository;
@@ -26,12 +27,8 @@ public class TransactionService {
 
     @Transactional
     public DetailsTransactionDTO create(CreateTransactionDTO data) {
-        var user = userRepository.findById(data.idUser());
-        if (data.idUser() != null && !user.isPresent()) {
-            throw new ValidacaoException("Usuário não encontrado.");
-        }
-
-        var transaction = new Transaction(data, user.get());
+        var user = verifyUser(data.idUser());
+        var transaction = new Transaction(data, user);
         repository.save(transaction);
         return new DetailsTransactionDTO(transaction);
     }
@@ -39,47 +36,30 @@ public class TransactionService {
 
     @Transactional
     public DetailsTransactionDTO details(Long id) {
-        var transaction = repository.findById(id);
-        if (!transaction.isPresent()) {
-            throw new ValidacaoException("Transação não encontrada.");
-        }
-        return new DetailsTransactionDTO(transaction.get());
+        var transaction = verifyTransaction(id);
+        return new DetailsTransactionDTO(transaction);
     }
 
     @Transactional
     public DetailsTransactionUpdateDTO update(Long id, UpdateTransactionDTO data) {
-        var user = userRepository.getReferenceById(data.userId());
-        if (user == null) {
-            throw new ValidacaoException("Usuário não encontrado.");
-        }
-        var transaction = repository.getReferenceById(id);
-        if (transaction == null) {
-            throw new ValidacaoException("Transação não encontrada.");
-        }
+        var user = verifyUser(data.userId());
+        var transaction = verifyTransaction(id);
         if (user.getId() != transaction.getUser().getId()) {
             throw new ValidacaoException("Usuário inválido.");
         }
         transaction.update(data);
         return new DetailsTransactionUpdateDTO(id, transaction);
-
     }
 
     @Transactional
     public String delete(Long id) {
-        var transaction = repository.findById(id);
-        if (!transaction.isPresent()) {
-            throw new ValidacaoException("Transação não encontrada.");
-        }
-        var user = userRepository.findById(transaction.get().getUser().getId());
-        if (!user.isPresent()) {
-            throw new ValidacaoException("Usuário não encontrado.");
-        }
-        transaction.get().removeTransaction();
-        user.get().removeTransaction(transaction.get());
-        repository.deleteById(transaction.get().getId());
+        var transaction = verifyTransaction(id);
+         var user = verifyUser(transaction.getUser().getId());
+        transaction.removeTransaction();
+        user.removeTransaction(transaction);
+        repository.deleteById(transaction.getId());
         return "Transação removido com suceso.";
     }
-
     public List<DetailsTransactionDTO> allTransactionsForUser(Long id) {
         List<DetailsTransactionDTO> transactionDTOS = new ArrayList<>();
         var transactions = repository.findAllByUserId(id);
@@ -87,14 +67,9 @@ public class TransactionService {
         );
         return transactionDTOS;
     }
-
     public List<DetailsTransactionDTO> userTransactionsByMonth(Long id, MonthTransaction month){
-        var user = userRepository.findById(id);
-        if(!user.isPresent()){
-            throw new ValidacaoException("Usuário não encontrado.");
-        }
-        var transactions = repository.findTransactionByEmailByUserId(month, user.get().getId());
-
+        var user = verifyUser(id);
+        var transactions = repository.findTransactionByEmailByUserId(month, user.getId());
         if(transactions.isEmpty()){
             throw new ValidacaoException("Nenhuma transação encotrada para o mês.");
         }
@@ -102,4 +77,22 @@ public class TransactionService {
                 .map(t -> new DetailsTransactionDTO(t))
                 .collect(Collectors.toList());
     }
+
+    /* method to simplify the code*/
+        private User verifyUser(Long id) {
+            var user = userRepository.findById(id);
+            if (!user.isPresent()) {
+                throw new ValidacaoException("Usuário não encontrado.");
+            }
+            return user.get();
+        }
+
+    private Transaction verifyTransaction(Long id) {
+        var transaction = repository.findById(id);
+        if (!transaction.isPresent()) {
+            throw new ValidacaoException("Transação não encontrada.");
+        }
+        return transaction.get();
+    }
+
 }

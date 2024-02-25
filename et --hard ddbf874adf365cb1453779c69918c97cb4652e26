@@ -1,0 +1,179 @@
+[33mcommit ddbf874adf365cb1453779c69918c97cb4652e26[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: matheus mozart <mmsnborges@gmail.com>
+Date:   Sun Feb 25 10:24:20 2024 -0400
+
+    finish serch by month and user
+
+[33mcommit ff11ea698983c67cdf2d284f4023ed10e0ea823b[m
+Author: matheus mozart <mmsnborges@gmail.com>
+Date:   Sat Feb 24 23:08:37 2024 -0400
+
+    adding serch by month and user
+
+[33mcommit dcea7e8e635800ec971a6d2c16cb05d162d238a6[m
+Author: matheus mozart <mmsnborges@gmail.com>
+Date:   Sat Feb 24 19:15:01 2024 -0400
+
+    allTransactionsForUser
+
+[33mcommit 28dedee3267fbe2fc906297640c6f05c70b0fbac[m
+Author: matheus mozart <mmsnborges@gmail.com>
+Date:   Sat Feb 24 10:56:48 2024 -0400
+
+    adding defense progamation
+
+[33mcommit b1dece6435b35ea6540263173bd0d62fcb6a56c0[m
+Author: matheus mozart <mmsnborges@gmail.com>
+Date:   Sat Feb 24 10:51:10 2024 -0400
+
+    delete transaction
+
+[33mcommit 12b633b33371c37e6478e6ca16393421fab5e91d[m
+Author: matheus mozart <mmsnborges@gmail.com>
+Date:   Fri Feb 23 19:21:06 2024 -0400
+
+    finish the update metod
+
+[33mcommit 69fbdaf3c34c982633d03aa1f34dbe8aa0c6c7ee[m
+Author: matheus mozart <mmsnborges@gmail.com>
+Date:   Fri Feb 23 13:33:53 2024 -0400
+
+    starting to implement a transaction update
+
+[33mcommit 4596f1ede7d96458bc23602056db798dcec068ad[m
+Author: matheus mozart <mmsnborges@gmail.com>
+Date:   Fri Feb 23 12:48:59 2024 -0400
+
+    details transaction
+
+[33mcommit 4bf5706a112e96999065ed245d41002a6495f0e1[m
+Author: matheus mozart <mmsnborges@gmail.com>
+Date:   Fri Feb 23 12:15:57 2024 -0400
+
+    transaction constructor modified
+
+[33mcommit 24c8dac9e9d78542efa72404f7050133e6f38051[m
+Author: matheus mozart <mmsnborges@gmail.com>
+Date:   Thu Feb 22 19:06:42 2024 -0400
+
+    V6__drop-column-month-transactions-in-transaction.sql
+
+[33mcommit d63190a388e8cc6f555acf736c8359c435554020[m
+Author: matheus mozart <mmsnborges@gmail.com>
+Date:   Thu Feb 22 18:59:42 2024 -0400
+
+    Adding create transaction
+
+[33mcommit c1dae0a9ed57d28ad2e832895675dd7e46f89e0b[m
+Author: matheus mozart <mmsnborges@gmail.com>
+Date:   Thu Feb 22 12:51:01 2024 -0400
+
+    adding transaction controller e dto
+
+[33mcommit a36a9f7f2cb5485a9f9bfad172bec6102c124a8c[m
+Author: matheus mozart <mmsnborges@gmail.com>
+Date:   Thu Feb 22 12:13:17 2024 -0400
+
+    implamiting firts management error, 500
+
+[33mcommit c5f1e61d2c497c37e719aa8a030c71e8264b33df[m
+Author: matheus mozart <mmsnborges@gmail.com>
+Date:   Thu Feb 22 12:05:29 2024 -0400
+
+    adding validator in create user
+
+[33mcommit 2f54c4ea8be7df37a38e6ead9e86ea22217c73b1[m
+Author: matheus mozart <mmsnborges@gmail.com>
+Date:   Wed Feb 21 13:30:47 2024 -0400
+
+    Starting to implement the validators.
+
+[33mcommit 31e8cc089ac316f3f6538b58c3bafb2df8320547[m
+Author: matheus mozart <mmsnborges@gmail.com>
+Date:   Wed Feb 21 12:55:58 2024 -0400
+
+    refactor code and introduce UserService
+
+[33mcommit 724fe1f8ec5dc8c2f73b6c532234e79f4161beb5[m
+Author: matheus mozart <mmsnborges@gmail.com>
+Date:   Tue Feb 20 12:33:04 2024 -0400
+
+    user CRUD finished
+
+[33mcommit 92fdd48eb1de891c094fc310f7321587296e87a6[m
+Author: matheus mozart <mmsnborges@gmail.com>
+Date:   Tue Feb 20 11:30:50 2024 -0400
+
+    add enum status
+
+[33mcommit a9bab892bb71092ba17b215154edf0a6498967ea[m
+Author: matheus mozart <mmsnborges@gmail.com>
+Date:   Mon Feb 19 12:35:36 2024 -0400
+
+    Creating relationships and migrating data into users and transactions.
+
+[33mcommit 789b7d465688517b1d20b8754b16e8927970c632[m
+Author: matheus mozart <mmsnborges@gmail.com>
+Date:   Sun Feb 18 14:31:19 2024 -0400
+
+    Adding the repository e create table
+
+[33mcommit 6745326baf34eb2ce86ddcdcb9c75b05d6434726[m
+Author: matheus mozart <mmsnborges@gmail.com>
+Date:   Sun Feb 18 13:56:35 2024 -0400
+
+    creating class transictions
+
+[33mcommit b174cb27e9209ba092315d809376673ea25b92d9[m
+Author: matheus mozart <mmsnborges@gmail.com>
+Date:   Fri Feb 16 20:18:08 2024 -0400
+
+    @Bean valdiation
+
+[33mcommit f7456a0649de318c06bbeca5ff8bcab5322baab3[m
+Author: matheus mozart <mmsnborges@gmail.com>
+Date:   Fri Feb 16 19:54:24 2024 -0400
+
+    bean validadation e migrations
+
+[33mcommit 5247a31fc839b68cbc8522d0ed1fb0954cee5292[m
+Author: matheus mozart <mmsnborges@gmail.com>
+Date:   Wed Feb 14 16:10:31 2024 -0400
+
+    create migrate and insert user into database
+
+[33mcommit c07a30db8ee4dc8dfbb19ed89831c61264729db9[m
+Author: matheus mozart <mmsnborges@gmail.com>
+Date:   Wed Feb 14 14:47:54 2024 -0400
+
+    environment properties
+
+[33mcommit 68fa3b8c75a1a2912c42fd1e4c22d5410c53cdf5[m
+Author: matheus mozart <mmsnborges@gmail.com>
+Date:   Wed Feb 14 14:24:16 2024 -0400
+
+    new dependecies and properties
+
+[33mcommit b26326fd9b3809ee3f85598b2b7f39c55b812656[m
+Author: matheus mozart <mmsnborges@gmail.com>
+Date:   Wed Feb 14 14:03:32 2024 -0400
+
+    user and dto
+
+[33mcommit 21d6a49805d110dbb53a181ff5393f45ac73f750[m
+Author: matheus mozart <mmsnborges@gmail.com>
+Date:   Tue Feb 13 14:51:06 2024 -0400
+
+    adding Cors and Determinate the income routes
+
+[33mcommit e0bade51aff1973c433270fa2a3f6245b9311c36[m
+Author: matheus mozart <mmsnborges@gmail.com>
+Date:   Sun Feb 11 11:23:42 2024 -0400
+
+    correção do texto
+
+[33mcommit 5cda9d003ab6409ff8fb1b6abf00209b79647f46[m
+Author: matheus mozart <mmsnborges@gmail.com>
+Date:   Sun Feb 11 11:22:07 2024 -0400
+
+    first commit
