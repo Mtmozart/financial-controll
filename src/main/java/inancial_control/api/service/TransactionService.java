@@ -1,6 +1,7 @@
 package inancial_control.api.service;
 
 import inancial_control.api.domain.transaction.*;
+import inancial_control.api.domain.user.DetailsUserDTO;
 import inancial_control.api.domain.user.validations.ValidacaoException;
 import inancial_control.api.repository.TransactionsRepository;
 import inancial_control.api.repository.UserRepository;
@@ -10,7 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.FileDescriptor;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -86,19 +89,17 @@ public class TransactionService {
     }
 
     public List<DetailsTransactionDTO> userTransactionsByMonth(Long id, MonthTransaction month){
-
-        List<DetailsTransactionDTO> transactionDTOS = new ArrayList<>();
         var user = userRepository.findById(id);
-        if(user.isEmpty()){
+        if(!user.isPresent()){
             throw new ValidacaoException("Usuário não encontrado.");
         }
-        var transactions = repository.findAllByMonthTransactionAndUserId(month, user.get().getId());
+        var transactions = repository.findTransactionByEmailByUserId(month, user.get().getId());
 
-        if(!transactions.isEmpty()){
+        if(transactions.isEmpty()){
             throw new ValidacaoException("Nenhuma transação encotrada para o mês.");
         }
-                transactions.stream()
-                        . forEach(t ->  transactionDTOS.add(new DetailsTransactionDTO(t)));
-        return  transactionDTOS;
+        return  transactions.stream()
+                .map(t -> new DetailsTransactionDTO(t))
+                .collect(Collectors.toList());
     }
 }

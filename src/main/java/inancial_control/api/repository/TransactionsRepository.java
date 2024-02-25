@@ -7,11 +7,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TransactionsRepository extends JpaRepository<Transaction, Long> {
 
     List<Transaction>  findAllByUserId(Long id);
 
-
-    List<Transaction> findAllByMonthTransactionAndUserId(MonthTransaction month, Long userId);
+    @Query("SELECT t FROM Transaction t WHERE t.monthTransaction = :month AND t.user.id = :userId")
+    List<Transaction> findTransactionByEmailByUserId(MonthTransaction month, Long userId);
 }

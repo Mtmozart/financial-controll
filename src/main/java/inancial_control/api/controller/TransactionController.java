@@ -59,12 +59,8 @@ public class TransactionController {
 
     @GetMapping("/user/{id}/month/{month}")
     public ResponseEntity userTransactionsByMonth(@PathVariable Long id, @PathVariable MonthTransaction month){
-        System.out.println(id + month.toString());
-        var transcations = service.userTransactionsByMonth(id, month);
-        if(transcations.isEmpty()){
-            return ResponseEntity.ok("Nenhuma transação para o usuário");
-        }
-        return ResponseEntity.ok(Collections.unmodifiableList(transcations));
+        var transactions = service.userTransactionsByMonth(id, month);
+        return ResponseEntity.ok(Collections.unmodifiableList(transactions));
 
     }
 
