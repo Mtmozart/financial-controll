@@ -74,6 +74,12 @@ public class TransactionController {
         return ResponseEntity.ok(Collections.unmodifiableList(transactions));
     }
 
+    @GetMapping("/user/{id}/month/{month}/balance")
+    public ResponseEntity balance(@PathVariable Long id, @PathVariable MonthTransaction month){
+        var balance = service.balance(id, month);
+        return ResponseEntity.ok(balance);
+    }
+
 
 
 }

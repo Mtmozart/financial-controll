@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.FileDescriptor;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -94,6 +96,34 @@ public class TransactionService {
         return converteData(transactions);
     }
 
+    public BigDecimal balance(Long id, MonthTransaction month) {
+
+        var user = verifyUser(id);
+        var transactionsEntries = repository.userTransactionsEntriesByMonthByUser(month, user.getId());
+        if (transactionsEntries.isEmpty()) {
+            throw new ValidacaoException("Nenhuma transação encotrada para o mês.");
+        }
+        var totalTransactionEntry = transactionsEntries.stream()
+                .map(Transaction::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        var transactionsExits = repository.userTransactionsExitsByMonthByUser(month, user.getId());
+        if (transactionsExits.isEmpty()) {
+            throw new ValidacaoException("Nenhuma transação encotrada para o mês.");
+        }
+        var totalTransactionsExits = transactionsExits.stream()
+                .map(Transaction::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        var balance = totalTransactionEntry.subtract(totalTransactionsExits);
+        return balance;
+
+
+
+
+    }
+
+
     /* method to simplify the code*/
     private User verifyUser(Long id) {
         var user = userRepository.findById(id);
@@ -116,5 +146,6 @@ public class TransactionService {
                 .map(t -> new DetailsTransactionDTO(t))
                 .collect(Collectors.toList());
     }
+
 
 }
