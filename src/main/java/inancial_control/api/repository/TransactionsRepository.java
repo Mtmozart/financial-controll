@@ -14,5 +14,7 @@ public interface TransactionsRepository extends JpaRepository<Transaction, Long>
     List<Transaction>  findAllByUserId(Long id);
 
     @Query("SELECT t FROM Transaction t WHERE t.monthTransaction = :month AND t.user.id = :userId")
-    List<Transaction> findTransactionByEmailByUserId(MonthTransaction month, Long userId);
+   List<Transaction> findTransactionByMonthByUserId(MonthTransaction month, Long userId);
+
+  //  List<Transaction> userTransactionsEntriesByMonthByUser(MonthTransaction month, Long id);
 }

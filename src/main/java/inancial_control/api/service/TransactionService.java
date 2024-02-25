@@ -54,38 +54,45 @@ public class TransactionService {
     @Transactional
     public String delete(Long id) {
         var transaction = verifyTransaction(id);
-         var user = verifyUser(transaction.getUser().getId());
+        var user = verifyUser(transaction.getUser().getId());
         transaction.removeTransaction();
         user.removeTransaction(transaction);
         repository.deleteById(transaction.getId());
         return "Transação removido com suceso.";
     }
+
     public List<DetailsTransactionDTO> allTransactionsForUser(Long id) {
-        List<DetailsTransactionDTO> transactionDTOS = new ArrayList<>();
+
         var transactions = repository.findAllByUserId(id);
-        transactions.forEach(t ->  transactionDTOS.add( new DetailsTransactionDTO(t))
-        );
-        return transactionDTOS;
-    }
-    public List<DetailsTransactionDTO> userTransactionsByMonth(Long id, MonthTransaction month){
-        var user = verifyUser(id);
-        var transactions = repository.findTransactionByEmailByUserId(month, user.getId());
-        if(transactions.isEmpty()){
-            throw new ValidacaoException("Nenhuma transação encotrada para o mês.");
-        }
-        return  transactions.stream()
-                .map(t -> new DetailsTransactionDTO(t))
-                .collect(Collectors.toList());
+        return converteData(transactions);
     }
 
-    /* method to simplify the code*/
-        private User verifyUser(Long id) {
-            var user = userRepository.findById(id);
-            if (!user.isPresent()) {
-                throw new ValidacaoException("Usuário não encontrado.");
-            }
-            return user.get();
+    public List<DetailsTransactionDTO> userTransactionsByMonth(Long id, MonthTransaction month) {
+        var user = verifyUser(id);
+        var transactions = repository.findTransactionByMonthByUserId(month, user.getId());
+        if (transactions.isEmpty()) {
+            throw new ValidacaoException("Nenhuma transação encotrada para o mês.");
         }
+        return converteData(transactions);
+    }
+
+   /* public List<DetailsTransactionDTO> userTransactionsEntriesByMonthByUser(Long id, MonthTransaction month) {
+        var user = verifyUser(id);
+        var transactions = repository.userTransactionsEntriesByMonthByUser(month, user.getId());
+        if (transactions.isEmpty()) {
+            throw new ValidacaoException("Nenhuma transação encotrada para o mês.");
+        }
+        return converteData(transactions);
+    }*/
+
+    /* method to simplify the code*/
+    private User verifyUser(Long id) {
+        var user = userRepository.findById(id);
+        if (!user.isPresent()) {
+            throw new ValidacaoException("Usuário não encontrado.");
+        }
+        return user.get();
+    }
 
     private Transaction verifyTransaction(Long id) {
         var transaction = repository.findById(id);
@@ -93,6 +100,12 @@ public class TransactionService {
             throw new ValidacaoException("Transação não encontrada.");
         }
         return transaction.get();
+    }
+
+    private List<DetailsTransactionDTO> converteData(List<Transaction> transactions){
+        return transactions.stream()
+                .map(t -> new DetailsTransactionDTO(t))
+                .collect(Collectors.toList());
     }
 
 }
