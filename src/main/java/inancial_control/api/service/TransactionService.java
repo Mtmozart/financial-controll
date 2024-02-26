@@ -78,28 +78,21 @@ public class TransactionService {
         return converteData(transactions);
     }
 
-    public List<DetailsTransactionDTO> userTransactionsEntriesByMonthByUser(Long id, MonthTransaction month) {
+    public List<DetailsTransactionDTO> userTransactionsOperationByMonthByUser(Long id, MonthTransaction month,
+                                                                              TransactionOperation operation) {
         var user = verifyUser(id);
-        var transactions = repository.userTransactionsEntriesByMonthByUser(month, user.getId());
+        var transactions = repository.userTransactionsOperationByMonthByUser(month, user.getId(), operation);
         if (transactions.isEmpty()) {
             throw new ValidacaoException("Nenhuma transação encotrada para o mês.");
         }
         return converteData(transactions);
     }
 
-    public List<DetailsTransactionDTO> userTransactionsExitsByMonthByUser(Long id, MonthTransaction month) {
-        var user = verifyUser(id);
-        var transactions = repository.userTransactionsExitsByMonthByUser(month, user.getId());
-        if (transactions.isEmpty()) {
-            throw new ValidacaoException("Nenhuma transação encotrada para o mês.");
-        }
-        return converteData(transactions);
-    }
 
     public BigDecimal balance(Long id, MonthTransaction month) {
 
         var user = verifyUser(id);
-        var transactionsEntries = repository.userTransactionsEntriesByMonthByUser(month, user.getId());
+        var transactionsEntries = repository.userTransactionsOperationByMonthByUser(month, user.getId(), TransactionOperation.ENTRY);
         if (transactionsEntries.isEmpty()) {
             throw new ValidacaoException("Nenhuma transação encotrada para o mês.");
         }
@@ -107,20 +100,45 @@ public class TransactionService {
                 .map(Transaction::getAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        var transactionsExits = repository.userTransactionsExitsByMonthByUser(month, user.getId());
+        var transactionsExits = repository.userTransactionsOperationByMonthByUser(month, user.getId(), TransactionOperation.EXIT);
         if (transactionsExits.isEmpty()) {
             throw new ValidacaoException("Nenhuma transação encotrada para o mês.");
         }
         var totalTransactionsExits = transactionsExits.stream()
                 .map(Transaction::getAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-
         var balance = totalTransactionEntry.subtract(totalTransactionsExits);
         return balance;
+    }
 
+    public List<DetailsTransactionDTO> allTransactionStutusByMonthByUser(Long id, MonthTransaction month,
+                                                                         TransactionOperation operation, Status status) {
+        var user = verifyUser(id);
+        var transactions = repository.userTransactionsStatusAndOperationByMonthByUser(month, user.getId(), operation, status);
+        if (transactions.isEmpty()) {
+            throw new ValidacaoException("Nenhuma transação encotrada para o mês.");
+        }
+        return converteData(transactions);
+    }
 
+    public BigDecimal balancePaidAndUnpaidByMonthAndUser(Long id, MonthTransaction month) {
+        var user = verifyUser(id);
+        var paidTransactionsEntry = repository.userTransactionsStatusAndOperationByMonthByUser(month,
+                user.getId(), TransactionOperation.ENTRY,
+                Status.PAID);
+        var TotalPaidTransactionsEntry = paidTransactionsEntry.stream()
+                .map(Transaction::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
+        var unpaidTransactionsEntry = repository.userTransactionsStatusAndOperationByMonthByUser(month,
+                user.getId(), TransactionOperation.EXIT,
+                Status.PAID);
 
+        var TotalUnpaidTransactionsEntry = unpaidTransactionsEntry.stream()
+                .map(Transaction::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        return TotalPaidTransactionsEntry.subtract(TotalUnpaidTransactionsEntry);
     }
 
 
@@ -140,6 +158,7 @@ public class TransactionService {
         }
         return transaction.get();
     }
+
 
     private List<DetailsTransactionDTO> converteData(List<Transaction> transactions) {
         return transactions.stream()

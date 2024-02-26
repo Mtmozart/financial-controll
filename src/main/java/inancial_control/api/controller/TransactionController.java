@@ -1,9 +1,6 @@
 package inancial_control.api.controller;
 
-import inancial_control.api.domain.transaction.CreateTransactionDTO;
-import inancial_control.api.domain.transaction.DetailsTransactionDTO;
-import inancial_control.api.domain.transaction.MonthTransaction;
-import inancial_control.api.domain.transaction.UpdateTransactionDTO;
+import inancial_control.api.domain.transaction.*;
 import inancial_control.api.service.TransactionService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,20 +60,30 @@ public class TransactionController {
         return ResponseEntity.ok(Collections.unmodifiableList(transactions));
 
     }
-    @GetMapping("/user/{id}/month/{month}/entries")
-    public ResponseEntity userTransactionsEntriesByMonth(@PathVariable Long id, @PathVariable MonthTransaction month){
-        var transactions = service.userTransactionsEntriesByMonthByUser(id, month);
-        return ResponseEntity.ok(Collections.unmodifiableList(transactions));
-    }
-    @GetMapping("/user/{id}/month/{month}/exits")
-    public ResponseEntity userTransactionsExitsByMonth(@PathVariable Long id, @PathVariable MonthTransaction month){
-        var transactions = service.userTransactionsExitsByMonthByUser(id, month);
+    @GetMapping("/user/{id}/month/{month}/trasancation-operation/{operation}")
+    public ResponseEntity userTransactionsEntriesByMonth(@PathVariable Long id, @PathVariable MonthTransaction month,
+                                                         @PathVariable TransactionOperation operation){
+        var transactions = service.userTransactionsOperationByMonthByUser(id, month, operation);
         return ResponseEntity.ok(Collections.unmodifiableList(transactions));
     }
 
-    @GetMapping("/user/{id}/month/{month}/balance")
+    @GetMapping("/user/{id}/month/{month}/trasancation-operation/{operation}/status/{status}")
+    public ResponseEntity paidGeneral(@PathVariable Long id, @PathVariable MonthTransaction month,
+                                      @PathVariable TransactionOperation operation, @PathVariable Status status){
+        var paidEntries = service.allTransactionStutusByMonthByUser(id, month, operation ,status);
+        return ResponseEntity.ok(Collections.unmodifiableList(paidEntries));
+    }
+
+
+   @GetMapping("/user/{id}/month/{month}/balance")
     public ResponseEntity balance(@PathVariable Long id, @PathVariable MonthTransaction month){
         var balance = service.balance(id, month);
+        return ResponseEntity.ok(balance);
+    }
+
+    @GetMapping("/user/{id}/month/{month}/balance/real-balance")
+    public ResponseEntity balancePaidAndUnpaidByMonthAndUser(@PathVariable Long id, @PathVariable MonthTransaction month){
+        var balance = service.balancePaidAndUnpaidByMonthAndUser(id, month);
         return ResponseEntity.ok(balance);
     }
 
