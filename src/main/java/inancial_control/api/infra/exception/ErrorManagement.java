@@ -17,27 +17,32 @@ public class ErrorManagement {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity managementError500(Exception ex) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro: " +ex.getLocalizedMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro: " + ex.getLocalizedMessage());
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity managementError404() {
         return ResponseEntity.notFound().build();
     }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity managementError400(MethodArgumentNotValidException ex) {
         var erros = ex.getFieldErrors();
 
         return ResponseEntity.badRequest().body(erros.stream()
-                .map(DataErroValidation::new).toList());
+                .map(DataErrorValidation::new).toList());
     }
 
-    private record  DataErroValidation(String field, String message){
-        private DataErroValidation (FieldError error) {
+    private record DataErrorValidation(String field, String message) {
+        private DataErrorValidation(FieldError error) {
             this(error.getField(), error.getDefaultMessage());
         }
     }
-
+    @ExceptionHandler(ValidacaoException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity handleErrorBusinessRule(ValidacaoException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity handleIllegalArgumentException(IllegalArgumentException ex) {
@@ -49,13 +54,8 @@ public class ErrorManagement {
     public ResponseEntity handleNoHandlerFoundException(NoHandlerFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Recurso não encontrado: " + ex.getRequestURL());
     }
-    @ExceptionHandler(ValidacaoException.class)
-    public ResponseEntity managementRuleOfNegotiation(ValidacaoException ex) {
-        return ResponseEntity.badRequest().body(ex.getMessage());
-    }
-    private record DataErrorValidation(String field, String mensage) {
-        public DataErrorValidation(FieldError erro) {
-            this(erro.getField(), erro.getDefaultMessage());
-        }
-    }
+
+
+
+
 }

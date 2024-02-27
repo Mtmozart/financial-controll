@@ -8,12 +8,16 @@ import inancial_control.api.domain.user.validations.createValidators.IValidatorU
 import inancial_control.api.domain.user.validations.updateValidators.IValidatorUserUpdate;
 import inancial_control.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
     @Autowired
     private UserRepository repository;
     @Autowired
@@ -41,5 +45,10 @@ public class UserService {
     public void delete(Long id){
         var user = repository.getReferenceById(id);
         user.delete(id);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        return repository.findByEmail(email);
     }
 }
