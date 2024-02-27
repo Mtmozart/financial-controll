@@ -1,7 +1,6 @@
 package inancial_control.api.service;
 
 import inancial_control.api.domain.transaction.*;
-import inancial_control.api.domain.user.DetailsUserDTO;
 import inancial_control.api.domain.user.User;
 import inancial_control.api.domain.user.validations.ValidacaoException;
 import inancial_control.api.repository.TransactionsRepository;
@@ -10,11 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.FileDescriptor;
 import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -66,7 +61,7 @@ public class TransactionService {
     public List<DetailsTransactionDTO> allTransactionsForUser(Long id) {
 
         var transactions = repository.findAllByUserId(id);
-        return converteData(transactions);
+        return convertData(transactions);
     }
 
     public List<DetailsTransactionDTO> userTransactionsByMonth(Long id, MonthTransaction month) {
@@ -75,7 +70,7 @@ public class TransactionService {
         if (transactions.isEmpty()) {
             throw new ValidacaoException("Nenhuma transação encotrada para o mês.");
         }
-        return converteData(transactions);
+        return convertData(transactions);
     }
 
     public List<DetailsTransactionDTO> userTransactionsOperationByMonthByUser(Long id, MonthTransaction month,
@@ -85,7 +80,7 @@ public class TransactionService {
         if (transactions.isEmpty()) {
             throw new ValidacaoException("Nenhuma transação encotrada para o mês.");
         }
-        return converteData(transactions);
+        return convertData(transactions);
     }
 
 
@@ -118,7 +113,7 @@ public class TransactionService {
         if (transactions.isEmpty()) {
             throw new ValidacaoException("Nenhuma transação encotrada para o mês.");
         }
-        return converteData(transactions);
+        return convertData(transactions);
     }
 
     public BigDecimal balancePaidAndUnpaidByMonthAndUser(Long id, MonthTransaction month) {
@@ -159,12 +154,12 @@ public class TransactionService {
         return transaction.get();
     }
 
-
-    private List<DetailsTransactionDTO> converteData(List<Transaction> transactions) {
+    private List<DetailsTransactionDTO> convertData(List<Transaction> transactions) {
         return transactions.stream()
                 .map(t -> new DetailsTransactionDTO(t))
                 .collect(Collectors.toList());
     }
+
 
 
 }

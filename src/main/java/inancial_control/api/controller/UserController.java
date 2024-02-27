@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.util.UriComponentsBuilder;
 
 
 @RestController
@@ -22,9 +22,10 @@ public class UserController {
     private UserService service;
 
     @PostMapping
-    public ResponseEntity create(@RequestBody @Valid CreateUserDTO data){
+    public ResponseEntity create(@RequestBody @Valid CreateUserDTO data, UriComponentsBuilder uriBuilder){
         var user = service.create(data);
-        return ResponseEntity.ok(user);
+        var uri = uriBuilder.path("users/{id}").buildAndExpand(user.id()).toUri();
+        return ResponseEntity.created(uri).body(user);
     }
 
     @GetMapping("/{id}")
