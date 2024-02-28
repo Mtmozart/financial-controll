@@ -1,4 +1,7 @@
 package inancial_control.api.domain.user;
 
-public record DataLogin (String login, String password){
+import com.fasterxml.jackson.annotation.JsonAlias;
+
+public record DataLogin (
+        @JsonAlias("email") String login, String password){
 }
