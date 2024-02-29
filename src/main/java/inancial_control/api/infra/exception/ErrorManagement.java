@@ -53,7 +53,7 @@ public class ErrorManagement {
 
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity badCredentialsException(BadCredentialsException ex) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciais inválidas"));
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciais inválidas");
     }
     @ExceptionHandler(BadRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
