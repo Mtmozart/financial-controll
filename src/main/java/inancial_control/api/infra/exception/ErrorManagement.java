@@ -72,7 +72,4 @@ public class ErrorManagement {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Recurso não encontrado: " + ex.getRequestURL());
     }
 
-
-
-
 }
