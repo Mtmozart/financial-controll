@@ -5,6 +5,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
@@ -30,7 +31,6 @@ public class ErrorManagement {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity managementError400(MethodArgumentNotValidException ex) {
         var erros = ex.getFieldErrors();
-
         return ResponseEntity.badRequest().body(erros.stream()
                 .map(DataErrorValidation::new).toList());
     }
@@ -50,6 +50,12 @@ public class ErrorManagement {
     public ResponseEntity handleIllegalArgumentException(IllegalArgumentException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Requisição inválida: " + ex.getLocalizedMessage());
     }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity runTimeException(RuntimeException ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Requisição inválida: " + ex.getLocalizedMessage());
+    }
+
 
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity badCredentialsException(BadCredentialsException ex) {
@@ -71,5 +77,11 @@ public class ErrorManagement {
     public ResponseEntity handleNoHandlerFoundException(NoHandlerFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Recurso não encontrado: " + ex.getRequestURL());
     }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity errorAccesDenied() {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Acesso negado");
+    }
+
 
 }
