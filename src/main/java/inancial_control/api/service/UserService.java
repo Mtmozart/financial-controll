@@ -25,6 +25,7 @@ public class UserService implements UserDetailsService {
     @Autowired List<IValidatorUserCreate> validatorUserCreates;
     public DetailsUserDTO create(CreateUserDTO data){
         var user = new User(data);
+        user.encryptedPassword(user.getPassword());
         validatorUserCreates.forEach(v -> v.validator(data));
         repository.save(user);
         return new DetailsUserDTO(user);

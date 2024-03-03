@@ -8,11 +8,11 @@ import jakarta.validation.constraints.Pattern;
 public record DetailsUserDTO(
         Long id,
         String name,
-        String email,
-       String password
+        String email
+
 )
 {
         public DetailsUserDTO(User user) {
-                this(user.getId(), user.getName(), user.getEmail(), user.getPassword());
+                this(user.getId(), user.getName(), user.getEmail());
         }
 }

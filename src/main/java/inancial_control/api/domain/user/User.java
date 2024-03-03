@@ -1,6 +1,7 @@
 package inancial_control.api.domain.user;
 
 import inancial_control.api.domain.transaction.Transaction;
+import inancial_control.api.infra.security.EncryptedPassword;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -28,7 +29,7 @@ public class User implements UserDetails {
     private String name;
     private String email;
     private String password;
-    @OneToMany(mappedBy = "user", cascade =  CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Collection<Transaction> transactions = new ArrayList<>();
     private boolean active;
 
@@ -39,12 +40,12 @@ public class User implements UserDetails {
         this.active = true;
     }
 
-    public void setTransactions(Transaction t){
+    public void setTransactions(Transaction t) {
         transactions.forEach(e -> e.setUser(this));
         this.transactions = transactions;
     }
 
-    public void update(UpdateUserDTO data){
+    public void update(UpdateUserDTO data) {
 
         if (data.name() != null) {
             this.name = data.name();
@@ -57,12 +58,18 @@ public class User implements UserDetails {
         }
     }
 
+    public void encryptedPassword(String password) {
+        EncryptedPassword encryptedPassword = new EncryptedPassword();
+        this.password = encryptedPassword.encodePassword(password);
+    }
+
+
     public void delete(Long id) {
         this.active = false;
     }
 
-    public void removeTransaction(Transaction t){
-       transactions.remove(t);
+    public void removeTransaction(Transaction t) {
+        transactions.remove(t);
     }
 
     @Override
@@ -75,6 +82,7 @@ public class User implements UserDetails {
     public String getUsername() {
         return email;
     }
+
     @Override
     public String getPassword() {
         return password;
