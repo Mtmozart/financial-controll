@@ -48,10 +48,23 @@ public class TokenService {
         }
     }
 
+    public String decodedJWT(String tokenJWT) {
+        DecodedJWT decodedJWT;
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(secret);
+            JWTVerifier verifier = JWT.require(algorithm)
+                    .withIssuer("API - Financial Control")
+                    .build();
+            decodedJWT = verifier.verify(tokenJWT);
+            decodedJWT.getSubject();
+            String name = decodedJWT.getClaim("name").asString();
+            return name;
+        } catch (JWTVerificationException exception) {
+            throw new RuntimeException("Token JWT inválido ou expirado!");
+        }
+    }
     private Instant dateExpire() {
         return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-04:00"));
     }
-
-
 
 }

@@ -7,6 +7,7 @@ import inancial_control.api.domain.user.User;
 import inancial_control.api.domain.user.validations.createValidators.IValidatorUserCreate;
 import inancial_control.api.domain.user.validations.detailsValidators.IValidatorUserDetails;
 import inancial_control.api.domain.user.validations.updateValidators.IValidatorUserUpdate;
+import inancial_control.api.infra.security.VerifyTokenAndUser;
 import inancial_control.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
@@ -24,6 +25,7 @@ public class UserService implements UserDetailsService {
     @Autowired private List<IValidatorUserUpdate> validatorUserUpdates;
     @Autowired private List<IValidatorUserCreate> validatorUserCreates;
     @Autowired private List<IValidatorUserDetails> validatorUserDetails;
+
     public DetailsUserDTO create(CreateUserDTO data){
         var user = new User(data);
         user.encryptedPassword(user.getPassword());
