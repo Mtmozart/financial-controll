@@ -2,6 +2,7 @@ package inancial_control.api.controller;
 
 import inancial_control.api.domain.transaction.*;
 import inancial_control.api.service.TransactionService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @RestController
 @RequestMapping("transactions")
+@SecurityRequirement(name="bearer-key")
 public class TransactionController {
 
     @Autowired

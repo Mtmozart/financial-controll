@@ -5,6 +5,7 @@ import inancial_control.api.domain.user.DetailsUserDTO;
 import inancial_control.api.domain.user.UpdateUserDTO;
 import inancial_control.api.domain.user.User;
 import inancial_control.api.domain.user.validations.createValidators.IValidatorUserCreate;
+import inancial_control.api.domain.user.validations.detailsValidators.IValidatorUserDetails;
 import inancial_control.api.domain.user.validations.updateValidators.IValidatorUserUpdate;
 import inancial_control.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +21,9 @@ import java.util.List;
 public class UserService implements UserDetailsService {
     @Autowired
     private UserRepository repository;
-    @Autowired
-    private List<IValidatorUserUpdate> validatorUserUpdates;
-    @Autowired List<IValidatorUserCreate> validatorUserCreates;
+    @Autowired private List<IValidatorUserUpdate> validatorUserUpdates;
+    @Autowired private List<IValidatorUserCreate> validatorUserCreates;
+    @Autowired private List<IValidatorUserDetails> validatorUserDetails;
     public DetailsUserDTO create(CreateUserDTO data){
         var user = new User(data);
         user.encryptedPassword(user.getPassword());
@@ -33,11 +34,12 @@ public class UserService implements UserDetailsService {
 
     public DetailsUserDTO details(Long id){
        var user =  repository.getReferenceById(id);
+       validatorUserDetails.forEach(v -> v.validator(id));
        return new DetailsUserDTO(user);
     }
 
-    public DetailsUserDTO update(UpdateUserDTO data){
-        var user =  repository.getReferenceById(data.id());
+    public DetailsUserDTO update(UpdateUserDTO data, Long id){
+        var user =  repository.getReferenceById(id);
         validatorUserUpdates.forEach(v -> v.validator(data));
         user.update(data);
         return new DetailsUserDTO(user);
@@ -47,7 +49,6 @@ public class UserService implements UserDetailsService {
         var user = repository.getReferenceById(id);
         user.delete(id);
     }
-
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
@@ -56,7 +57,6 @@ public class UserService implements UserDetailsService {
         if (userDetails == null) {
             throw new UsernameNotFoundException("Usuário não encontrado com o login: " + email);
         }
-
         return userDetails;
 
     }

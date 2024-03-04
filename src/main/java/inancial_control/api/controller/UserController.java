@@ -6,6 +6,7 @@ import inancial_control.api.repository.UserRepository;
 import inancial_control.api.domain.user.CreateUserDTO;
 import inancial_control.api.domain.user.User;
 import inancial_control.api.service.UserService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,20 +30,23 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
+    @SecurityRequirement(name="bearer-key")
     public ResponseEntity details(@PathVariable Long id){
       var user =  service.details(id);
       return ResponseEntity.ok(user);
     }
 
-    @PutMapping
+    @PutMapping("{id}")
     @Transactional
-    public ResponseEntity update(@RequestBody @Valid UpdateUserDTO data) {
-        var user =  service.update(data);
+    @SecurityRequirement(name="bearer-key")
+    public ResponseEntity update(@RequestBody @Valid UpdateUserDTO data, @PathVariable Long id) {
+        var user =  service.update(data, id);
         return ResponseEntity.ok(user);
     }
 
     @DeleteMapping("{id}")
     @Transactional
+    @SecurityRequirement(name="bearer-key")
     public ResponseEntity delete(@PathVariable Long id) {
        service.delete(id);
        return ResponseEntity.noContent().build();

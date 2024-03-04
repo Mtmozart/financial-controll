@@ -1,9 +1,12 @@
 package inancial_control.api.infra.security;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import inancial_control.api.domain.user.DetailsUserDTO;
 import inancial_control.api.domain.user.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -18,15 +21,16 @@ import java.util.Date;
 public class TokenService {
     @Value("${api.security.token.secret}")
     private String secret;
-    public String gerarToken(User user){
+
+    public String generateToken(User user) {
         try {
             Algorithm algorithm = Algorithm.HMAC256("12345678");
-            return  JWT.create()
+            return JWT.create()
                     .withIssuer("API - Financial Control")
                     .withSubject(user.getEmail())
                     .withExpiresAt(dateExpire())
                     .sign(algorithm);
-        } catch (JWTCreationException exception){
+        } catch (JWTCreationException exception) {
             throw new RuntimeException("Erro ao gerar o token. ", exception);
         }
     }
@@ -47,4 +51,7 @@ public class TokenService {
     private Instant dateExpire() {
         return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-04:00"));
     }
+
+
+
 }

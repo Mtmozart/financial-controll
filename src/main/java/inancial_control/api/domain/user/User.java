@@ -54,13 +54,13 @@ public class User implements UserDetails {
             this.email = data.email();
         }
         if (data.password() != null) {
-            this.password = data.password();
+            this.password = encryptedPassword(data.password());
         }
     }
 
-    public void encryptedPassword(String password) {
+    public String encryptedPassword(String password) {
         EncryptedPassword encryptedPassword = new EncryptedPassword();
-        this.password = encryptedPassword.encodePassword(password);
+        return this.password = encryptedPassword.encodePassword(password);
     }
 
 

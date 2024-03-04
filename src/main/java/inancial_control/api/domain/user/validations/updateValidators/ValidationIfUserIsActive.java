@@ -6,16 +6,20 @@ import inancial_control.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component("ValidationIfEmailAlreadyExistsInUpdate.")
-public class ValidationIfEmailExists implements IValidatorUserUpdate {
+@Component("ValidationIfUserIsActiveInUpdate.")
+public class ValidationIfUserIsActive implements IValidatorUserUpdate{
     @Autowired
     private UserRepository repository;
-
     @Override
     public void validator(UpdateUserDTO data) {
-        var userExists = repository.findByEmailContainingIgnoreCase(data.email());
-        if (userExists.isPresent() && !userExists.get().getEmail().toUpperCase().equals(data.email().toUpperCase())) {
-            throw new ValidacaoException("E-mail já cadastrado.");
+        if(data == null){
+            return;
         }
+        var userActive = repository.findUserEmailIifsActive(data.email());
+        System.out.println();
+        if(!userActive){
+            throw new ValidacaoException("O usuário inativo");
+        }
+
     }
 }
