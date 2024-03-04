@@ -1,6 +1,8 @@
 package inancial_control.api.service;
 
 import inancial_control.api.domain.transaction.*;
+import inancial_control.api.domain.transaction.validations.create.IValidationsCreate;
+import inancial_control.api.domain.transaction.validations.create.globaValidations.IValidationsGeneral;
 import inancial_control.api.domain.user.User;
 import inancial_control.api.domain.user.validations.ValidacaoException;
 import inancial_control.api.repository.TransactionsRepository;
@@ -21,25 +23,28 @@ public class TransactionService {
     TransactionsRepository repository;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    private List<IValidationsGeneral> validationsGenerals;
 
     @Transactional
     public DetailsTransactionDTO create(CreateTransactionDTO data) {
         var user = verifyUser(data.idUser());
+        validationsGenerals.forEach(v -> v.validator(data));
         var transaction = new Transaction(data, user);
         repository.save(transaction);
         return new DetailsTransactionDTO(transaction);
     }
-
-
     @Transactional
     public DetailsTransactionDTO details(Long id) {
         var transaction = verifyTransaction(id);
+
         return new DetailsTransactionDTO(transaction);
     }
 
     @Transactional
     public DetailsTransactionUpdateDTO update(Long id, UpdateTransactionDTO data) {
         var user = verifyUser(data.userId());
+        validationsGenerals.forEach(v -> v.validator(data));
         var transaction = verifyTransaction(id);
         if (user.getId() != transaction.getUser().getId()) {
             throw new ValidacaoException("Usuário inválido.");
