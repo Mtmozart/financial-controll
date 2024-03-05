@@ -15,7 +15,7 @@ public class ValidateIfUserIsActive implements IValidationsCreate {
     public void validator(CreateTransactionDTO data) {
     var user = repository.findUserIdlIifsActive(data.idUser());
     if(!user) {
-        throw new ValidacaoException("Erro ao criar o transação, usuário inativo.");
+        throw new ValidacaoException("Erro ao criar a transação, usuário inativo.");
     }
 
  }

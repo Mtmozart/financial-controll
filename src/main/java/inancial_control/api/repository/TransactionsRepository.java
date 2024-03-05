@@ -28,4 +28,9 @@ public interface TransactionsRepository extends JpaRepository<Transaction, Long>
     List<Transaction> userTransactionsStatusAndOperationByMonthByUser(MonthTransaction month, Long userId,
                                                           TransactionOperation transaction, Status status);
 
+    @Query("""
+            SELECT t FROM Transaction t WHERE t.user.id = :id
+            AND t.user.active = true
+        """)
+    boolean findUserIdlIifsActive(Long id);
 }

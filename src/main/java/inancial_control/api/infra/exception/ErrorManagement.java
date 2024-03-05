@@ -20,7 +20,7 @@ public class ErrorManagement {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity managementError500(Exception ex) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro: " + ex.getLocalizedMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new MessageError("Erro: " + ex.getLocalizedMessage()));
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
@@ -43,23 +43,23 @@ public class ErrorManagement {
     @ExceptionHandler(ValidacaoException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity handleErrorBusinessRule(ValidacaoException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageError(ex.getMessage()));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity handleIllegalArgumentException(IllegalArgumentException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Requisição inválida: " + ex.getLocalizedMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageError("Requisição inválida: " + ex.getLocalizedMessage()));
     }
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity runTimeException(RuntimeException ex) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Requisição inválida: " + ex.getLocalizedMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new MessageError("Requisição inválida: " + ex.getLocalizedMessage()));
     }
 
 
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity badCredentialsException(BadCredentialsException ex) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciais inválidas");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageError("Credenciais inválidas"));
     }
     @ExceptionHandler(BadRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -69,18 +69,18 @@ public class ErrorManagement {
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity tratarErroAuthentication() {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Falha na autenticação");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageError("Falha na autenticação"));
     }
 
     @ExceptionHandler(NoHandlerFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity handleNoHandlerFoundException(NoHandlerFoundException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Recurso não encontrado: " + ex.getRequestURL());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageError("Recurso não encontrado: " + ex.getRequestURL()));
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity errorAccesDenied() {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Acesso negado");
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new MessageError("Acesso negado"));
     }
 
 

@@ -2,7 +2,10 @@ package inancial_control.api.service;
 
 import inancial_control.api.domain.transaction.*;
 import inancial_control.api.domain.transaction.validations.create.IValidationsCreate;
-import inancial_control.api.domain.transaction.validations.create.globaValidations.IValidationsGeneral;
+import inancial_control.api.domain.transaction.validations.getAll.IValidationsGetters;
+import inancial_control.api.domain.transaction.validations.getTransaction.IValidationsGetTransaction;
+import inancial_control.api.domain.transaction.validations.update.IValidationsUpdate;
+import inancial_control.api.domain.transaction.validations.userTransaction.IValidationsByUser;
 import inancial_control.api.domain.user.User;
 import inancial_control.api.domain.user.validations.ValidacaoException;
 import inancial_control.api.repository.TransactionsRepository;
@@ -24,27 +27,35 @@ public class TransactionService {
     @Autowired
     UserRepository userRepository;
     @Autowired
-    private List<IValidationsGeneral> validationsGenerals;
+    private List<IValidationsCreate> validationsCreateAndUpdates;
+    @Autowired
+    private List<IValidationsUpdate> validationsUpdates;
+    @Autowired
+    private List<IValidationsGetters> validationsGetters;
+    @Autowired
+    private List<IValidationsGetTransaction> validationsGetTransactions;
+    @Autowired
+    private List<IValidationsByUser> validationsByUsers;
 
     @Transactional
     public DetailsTransactionDTO create(CreateTransactionDTO data) {
         var user = verifyUser(data.idUser());
-        validationsGenerals.forEach(v -> v.validator(data));
+        validationsCreateAndUpdates.forEach(v -> v.validator(data));
         var transaction = new Transaction(data, user);
         repository.save(transaction);
         return new DetailsTransactionDTO(transaction);
     }
     @Transactional
     public DetailsTransactionDTO details(Long id) {
+        validationsGetters.forEach(v -> v.validator(id));
         var transaction = verifyTransaction(id);
-
         return new DetailsTransactionDTO(transaction);
     }
 
     @Transactional
     public DetailsTransactionUpdateDTO update(Long id, UpdateTransactionDTO data) {
         var user = verifyUser(data.userId());
-        validationsGenerals.forEach(v -> v.validator(data));
+        validationsUpdates.forEach(v -> v.validator(data));
         var transaction = verifyTransaction(id);
         if (user.getId() != transaction.getUser().getId()) {
             throw new ValidacaoException("Usuário inválido.");
@@ -64,12 +75,13 @@ public class TransactionService {
     }
 
     public List<DetailsTransactionDTO> allTransactionsForUser(Long id) {
-
+        validationsByUsers.forEach(v -> v.validator(id));
         var transactions = repository.findAllByUserId(id);
         return convertData(transactions);
     }
 
     public List<DetailsTransactionDTO> userTransactionsByMonth(Long id, MonthTransaction month) {
+        validationsGetters.forEach(v -> v.validator(id));
         var user = verifyUser(id);
         var transactions = repository.findTransactionByMonthByUserId(month, user.getId());
         if (transactions.isEmpty()) {
@@ -80,6 +92,7 @@ public class TransactionService {
 
     public List<DetailsTransactionDTO> userTransactionsOperationByMonthByUser(Long id, MonthTransaction month,
                                                                               TransactionOperation operation) {
+        validationsGetters.forEach(v -> v.validator(id));
         var user = verifyUser(id);
         var transactions = repository.userTransactionsOperationByMonthByUser(month, user.getId(), operation);
         if (transactions.isEmpty()) {
@@ -90,7 +103,7 @@ public class TransactionService {
 
 
     public BigDecimal balance(Long id, MonthTransaction month) {
-
+        validationsGetters.forEach(v -> v.validator(id));
         var user = verifyUser(id);
         var transactionsEntries = repository.userTransactionsOperationByMonthByUser(month, user.getId(), TransactionOperation.ENTRY);
         if (transactionsEntries.isEmpty()) {
@@ -113,6 +126,7 @@ public class TransactionService {
 
     public List<DetailsTransactionDTO> allTransactionStutusByMonthByUser(Long id, MonthTransaction month,
                                                                          TransactionOperation operation, Status status) {
+        validationsGetters.forEach(v -> v.validator(id));
         var user = verifyUser(id);
         var transactions = repository.userTransactionsStatusAndOperationByMonthByUser(month, user.getId(), operation, status);
         if (transactions.isEmpty()) {
@@ -122,6 +136,7 @@ public class TransactionService {
     }
 
     public BigDecimal balancePaidAndUnpaidByMonthAndUser(Long id, MonthTransaction month) {
+        validationsGetters.forEach(v -> v.validator(id));
         var user = verifyUser(id);
         var paidTransactionsEntry = repository.userTransactionsStatusAndOperationByMonthByUser(month,
                 user.getId(), TransactionOperation.ENTRY,
